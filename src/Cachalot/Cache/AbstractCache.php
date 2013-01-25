@@ -33,7 +33,12 @@ abstract class AbstractCache implements \Cachalot\Cache
             throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
         }
 
-        return call_user_func_array($callback, $params);
+        $result = call_user_func_array($callback, $params);
+        if ($result instanceof \Iterator) {
+            $result = iterator_to_array($result);
+        }
+
+        return $result;
     }
 
     /**
@@ -45,7 +50,7 @@ abstract class AbstractCache implements \Cachalot\Cache
     protected function getCallbackCacheId($callback, $params = array(), $cacheIdSuffix = null)
     {
         if (is_array($callback)) {
-            $callbackStr = get_class($callback[0]) . '::' . $callback[1];
+            $callbackStr = (is_string($callback[0]) ? $callback[0] : get_class($callback[0])) . '::' . $callback[1];
         }
         else if (is_object($callback)) {
             $callbackStr = get_class($callback);

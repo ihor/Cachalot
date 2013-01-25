@@ -8,6 +8,8 @@ namespace Cachalot;
 
 interface Cache
 {
+    const ONE_DAY = 86400;
+
     /**
      * @throws \InvalidArgumentException
      * @param \callable $callback
