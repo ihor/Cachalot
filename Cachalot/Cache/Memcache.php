@@ -11,47 +11,17 @@ class Memcache extends AbstractCache
     /**
      * @var \Memcache
      */
-    private $_cache;
-
-    /**
-     * @var string
-     */
-    private $host;
-
-    /**
-     * @var int
-     */
-    private $port;
+    private $cache;
 
     /**
      * @param string $prefix
-     * @param string $host
-     * @param int $port
+     * @param \Memcache $memcache
      * @throws \RuntimeException
      */
-    public function __construct($prefix = '', $host, $port)
+    public function __construct($prefix = '', $memcache)
     {
-        if (!extension_loaded('memcache')) {
-            throw new \RuntimeException('Unable to use Memcache cache as memcache extension is not enabled.');
-        }
-
-        $this->host = $host;
-        $this->port = $port;
-
+        $this->cache = $memcache;
         parent::__construct($prefix);
-    }
-
-    /**
-     * @return \Memcache
-     */
-    private function getCache()
-    {
-        if (null === $this->_cache) {
-            $this->_cache = new \Memcache();
-            $this->_cache->connect($this->host, $this->port);
-        }
-
-        return $this->_cache;
     }
 
     /**
@@ -66,9 +36,9 @@ class Memcache extends AbstractCache
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
-        if (false === $result = $this->getCache()->get($id)) {
+        if (false === $result = $this->cache->get($id)) {
             $result = $this->call($callback, $params);
-            $this->getCache()->set($id, $result, false, $expireIn);
+            $this->cache->set($id, $result, false, $expireIn);
         }
 
         return $result;
