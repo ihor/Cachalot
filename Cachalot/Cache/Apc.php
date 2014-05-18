@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @author Ihor Burlachenko
- */
-
 namespace Cachalot\Cache;
 
 class Apc extends AbstractCache
