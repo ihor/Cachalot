@@ -10,11 +10,11 @@ class Memcache extends AbstractCache
     private $cache;
 
     /**
-     * @param string $prefix
      * @param \Memcache $memcache
+     * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($prefix = '', $memcache)
+    public function __construct($memcache, $prefix = '')
     {
         $this->cache = $memcache;
         parent::__construct($prefix);
