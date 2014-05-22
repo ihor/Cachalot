@@ -4,6 +4,9 @@ namespace Cachalot;
 
 interface Cache
 {
+    const FIFTEEN_MINUTES = 900;
+    const HALF_HOUR = 1800;
+    const ONE_HOUR = 3600;
     const ONE_DAY = 86400;
 
     /**
