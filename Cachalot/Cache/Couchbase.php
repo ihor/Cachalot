@@ -32,7 +32,7 @@ class Couchbase extends AbstractCache
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
-        if (false === $result = $this->cache->get($id)) {
+        if (null === $result = $this->cache->get($id)) {
             $result = $this->call($callback, $params);
             $this->cache->set($id, $result, $expireIn);
         }
