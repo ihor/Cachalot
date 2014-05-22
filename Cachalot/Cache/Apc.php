@@ -10,8 +10,8 @@ class Apc extends AbstractCache
      */
     public function __construct($prefix = '')
     {
-        if (!extension_loaded('apc')) {
-            throw new \RuntimeException('Unable to use APC cache as APC extension is not enabled.');
+        if (!extension_loaded('apc') && !extension_loaded('apcu')) {
+            throw new \RuntimeException('Unable to use APC(u) cache as APC(u) extension is not enabled.');
         }
 
         parent::__construct($prefix);
