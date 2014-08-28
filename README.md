@@ -1,7 +1,7 @@
 Cachalot
 ========
 
-Cachalot (cache a lot) is an easy to use caching library. It does only one thing - returns cached callback result.
+Cachalot (cache a lot) is an easy to use caching library. It supposed to do only one thing - return cached callback result.
 
 ```php
 $cache = new \Cachalot\Cache\ArrayCache();

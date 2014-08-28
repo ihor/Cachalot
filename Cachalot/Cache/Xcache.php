@@ -39,4 +39,42 @@ class Xcache extends AbstractCache
         return $result;
     }
 
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function contains($id)
+    {
+        return xcache_isset($this->prefixize($id));
+    }
+
+    /**
+     * @param string $id
+     * @return bool|mixed
+     */
+    public function get($id)
+    {
+        return xcache_get($this->prefixize($id));
+    }
+
+    /**
+     * @param string $id
+     * @param mixed $value
+     * @param int $expireIn
+     * @return bool
+     */
+    public function set($id, $value, $expireIn = 0)
+    {
+        return xcache_set($this->prefixize($id), $value, $expireIn);
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        return xcache_unset($this->prefixize($id));
+    }
+
 }

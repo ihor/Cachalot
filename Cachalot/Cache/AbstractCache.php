@@ -73,4 +73,13 @@ abstract class AbstractCache implements \Cachalot\Cache
         return strval($param);
     }
 
+    /**
+     * @param string $id
+     * @return string
+     */
+    protected function prefixize($id)
+    {
+        return $this->prefix . $id;
+    }
+
 }

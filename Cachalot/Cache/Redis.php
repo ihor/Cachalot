@@ -40,4 +40,42 @@ class Redis extends AbstractCache
         return unserialize($result);
     }
 
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function contains($id)
+    {
+        return $this->cache->exists($this->prefixize($id));
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function get($id)
+    {
+        return $this->cache->get($this->prefixize($id));
+    }
+
+    /**
+     * @param string $id
+     * @param mixed $value
+     * @param int $expireIn
+     * @return bool
+     */
+    public function set($id, $value, $expireIn = 0)
+    {
+        return $this->cache->set($this->prefixize($id), $value, $expireIn);
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        return !$this->cache->delete($this->prefixize($id));
+    }
+
 }

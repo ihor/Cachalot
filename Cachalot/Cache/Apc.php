@@ -37,4 +37,42 @@ class Apc extends AbstractCache
         return $result;
     }
 
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function contains($id)
+    {
+        return apc_exists($this->prefixize($id));
+    }
+
+    /**
+     * @param string $id
+     * @return bool|mixed
+     */
+    public function get($id)
+    {
+        return apc_fetch($this->prefixize($id));
+    }
+
+    /**
+     * @param string $id
+     * @param mixed $value
+     * @param int $expireIn
+     * @return array|bool
+     */
+    public function set($id, $value, $expireIn = 0)
+    {
+        return apc_store($this->prefixize($id), $value, $expireIn);
+    }
+
+    /**
+     * @param string $id
+     * @return bool|string[]
+     */
+    public function delete($id)
+    {
+        return apc_delete($this->prefixize($id));
+    }
+
 }
