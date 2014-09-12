@@ -2,21 +2,18 @@
 
 namespace Cachalot;
 
-class Redis extends AbstractCache
+class ApcCache extends AbstractCache
 {
     /**
-     * @var \Redis
-     */
-    private $cache;
-
-    /**
-     * @param \Redis $redis
      * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($redis, $prefix = '')
+    public function __construct($prefix = '')
     {
-        $this->cache = $redis;
+        if (!extension_loaded('apc') && !extension_loaded('apcu')) {
+            throw new \RuntimeException('Unable to use APC(u) cache as APC(u) extension is not enabled.');
+        }
+
         parent::__construct($prefix);
     }
 
@@ -32,12 +29,12 @@ class Redis extends AbstractCache
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
-        if (false === $result = $this->cache->get($id)) {
-            $result = serialize($this->call($callback, $params));
-            $this->cache->set($id, $result, $expireIn);
+        if (false === $result = apc_fetch($id)) {
+            $result = $this->call($callback, $params);
+            apc_store($id, $result, $expireIn);
         }
 
-        return unserialize($result);
+        return $result;
     }
 
     /**
@@ -46,36 +43,36 @@ class Redis extends AbstractCache
      */
     public function contains($id)
     {
-        return $this->cache->exists($this->prefixize($id));
+        return apc_exists($this->prefixize($id));
     }
 
     /**
      * @param string $id
-     * @return bool
+     * @return bool|mixed
      */
     public function get($id)
     {
-        return $this->cache->get($this->prefixize($id));
+        return apc_fetch($this->prefixize($id));
     }
 
     /**
      * @param string $id
      * @param mixed $value
      * @param int $expireIn
-     * @return bool
+     * @return array|bool
      */
     public function set($id, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($id), $value, $expireIn);
+        return apc_store($this->prefixize($id), $value, $expireIn);
     }
 
     /**
      * @param string $id
-     * @return bool
+     * @return bool|string[]
      */
     public function delete($id)
     {
-        return !$this->cache->delete($this->prefixize($id));
+        return apc_delete($this->prefixize($id));
     }
 
 }

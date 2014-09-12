@@ -2,7 +2,7 @@
 
 namespace Cachalot;
 
-class Blackhole extends AbstractCache
+class BlackholeCache extends AbstractCache
 {
     /**
      * @throws \InvalidArgumentException

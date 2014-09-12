@@ -33,6 +33,6 @@ Installation
 Define the following requirement in your composer.json file:
 ```
 "require": {
-    "ihor/cachalot": "2.0"
+    "ihor/cachalot": "2.1"
 }
 ```

@@ -2,7 +2,7 @@
 
 namespace Cachalot;
 
-class Memcache extends AbstractCache
+class MemcacheCache extends AbstractCache
 {
     /**
      * @var \Memcache

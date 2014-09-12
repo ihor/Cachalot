@@ -2,7 +2,7 @@
 
 namespace Cachalot;
 
-class Xcache extends AbstractCache
+class XcacheCache extends AbstractCache
 {
     /**
      * @param string $prefix

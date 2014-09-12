@@ -2,21 +2,21 @@
 
 namespace Cachalot;
 
-class Couchbase extends AbstractCache
+class RedisCache extends AbstractCache
 {
     /**
-     * @var \Couchbase
+     * @var \Redis
      */
     private $cache;
 
     /**
-     * @param \Couchbase $couchbase
+     * @param \Redis $redis
      * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($couchbase, $prefix = '')
+    public function __construct($redis, $prefix = '')
     {
-        $this->cache = $couchbase;
+        $this->cache = $redis;
         parent::__construct($prefix);
     }
 
@@ -32,12 +32,12 @@ class Couchbase extends AbstractCache
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
-        if (null === $result = $this->cache->get($id)) {
-            $result = $this->call($callback, $params);
+        if (false === $result = $this->cache->get($id)) {
+            $result = serialize($this->call($callback, $params));
             $this->cache->set($id, $result, $expireIn);
         }
 
-        return $result;
+        return unserialize($result);
     }
 
     /**
@@ -46,12 +46,12 @@ class Couchbase extends AbstractCache
      */
     public function contains($id)
     {
-        return (bool) $this->cache->get($this->prefixize($id));
+        return $this->cache->exists($this->prefixize($id));
     }
 
     /**
      * @param string $id
-     * @return bool|mixed
+     * @return bool
      */
     public function get($id)
     {
@@ -75,7 +75,7 @@ class Couchbase extends AbstractCache
      */
     public function delete($id)
     {
-        return $this->cache->delete($this->prefixize($id));
+        return !$this->cache->delete($this->prefixize($id));
     }
 
 }
