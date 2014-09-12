@@ -6,7 +6,7 @@ Cachalot (cache a lot) is an easy to use caching library. It supposed to do only
 Usage
 -----
 ```php
-$cache = new \Cachalot\Cache\ArrayCache();
+$cache = new \Cachalot\ArrayCache();
 
 $greet = function($name) {
     return 'Hello ' . $name;
@@ -33,6 +33,6 @@ Installation
 Define the following requirement in your composer.json file:
 ```
 "require": {
-    "ihor/cachalot": "1.2"
+    "ihor/cachalot": "2.0"
 }
 ```
