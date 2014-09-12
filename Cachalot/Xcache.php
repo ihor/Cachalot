@@ -1,22 +1,19 @@
 <?php
 
-namespace Cachalot\Cache;
+namespace Cachalot;
 
-class Couchbase extends AbstractCache
+class Xcache extends AbstractCache
 {
     /**
-     * @var \Couchbase
-     */
-    private $cache;
-
-    /**
-     * @param \Couchbase $couchbase
      * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($couchbase, $prefix = '')
+    public function __construct($prefix = '')
     {
-        $this->cache = $couchbase;
+        if (!extension_loaded('xcache')) {
+            throw new \RuntimeException('Unable to use XCache cache as XCache extension is not enabled.');
+        }
+
         parent::__construct($prefix);
     }
 
@@ -32,10 +29,12 @@ class Couchbase extends AbstractCache
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
-        if (null === $result = $this->cache->get($id)) {
-            $result = $this->call($callback, $params);
-            $this->cache->set($id, $result, $expireIn);
+        if (xcache_isset($id)) {
+            return unserialize(xcache_get($id));
         }
+
+        $result = $this->call($callback, $params);
+        xcache_set($id, serialize($result), $expireIn);
 
         return $result;
     }
@@ -46,7 +45,7 @@ class Couchbase extends AbstractCache
      */
     public function contains($id)
     {
-        return (bool) $this->cache->get($this->prefixize($id));
+        return xcache_isset($this->prefixize($id));
     }
 
     /**
@@ -55,7 +54,7 @@ class Couchbase extends AbstractCache
      */
     public function get($id)
     {
-        return $this->cache->get($this->prefixize($id));
+        return xcache_get($this->prefixize($id));
     }
 
     /**
@@ -66,7 +65,7 @@ class Couchbase extends AbstractCache
      */
     public function set($id, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($id), $value, $expireIn);
+        return xcache_set($this->prefixize($id), $value, $expireIn);
     }
 
     /**
@@ -75,7 +74,7 @@ class Couchbase extends AbstractCache
      */
     public function delete($id)
     {
-        return $this->cache->delete($this->prefixize($id));
+        return xcache_unset($this->prefixize($id));
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cachalot\Cache;
+namespace Cachalot;
 
 class Redis extends AbstractCache
 {

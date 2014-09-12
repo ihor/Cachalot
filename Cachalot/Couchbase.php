@@ -1,22 +1,22 @@
 <?php
 
-namespace Cachalot\Cache;
+namespace Cachalot;
 
-class Memcache extends AbstractCache
+class Couchbase extends AbstractCache
 {
     /**
-     * @var \Memcache
+     * @var \Couchbase
      */
     private $cache;
 
     /**
-     * @param \Memcache $memcache
+     * @param \Couchbase $couchbase
      * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($memcache, $prefix = '')
+    public function __construct($couchbase, $prefix = '')
     {
-        $this->cache = $memcache;
+        $this->cache = $couchbase;
         parent::__construct($prefix);
     }
 
@@ -32,9 +32,9 @@ class Memcache extends AbstractCache
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
-        if (false === $result = $this->cache->get($id)) {
+        if (null === $result = $this->cache->get($id)) {
             $result = $this->call($callback, $params);
-            $this->cache->set($id, $result, false, $expireIn);
+            $this->cache->set($id, $result, $expireIn);
         }
 
         return $result;
@@ -66,7 +66,7 @@ class Memcache extends AbstractCache
      */
     public function set($id, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($id), $value, false, $expireIn);
+        return $this->cache->set($this->prefixize($id), $value, $expireIn);
     }
 
     /**

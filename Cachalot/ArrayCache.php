@@ -1,21 +1,18 @@
 <?php
 
-namespace Cachalot\Cache;
+namespace Cachalot;
 
-class Apc extends AbstractCache
+class ArrayCache extends AbstractCache
 {
     /**
-     * @param string $prefix
-     * @throws \RuntimeException
+     * @var array
      */
-    public function __construct($prefix = '')
-    {
-        if (!extension_loaded('apc') && !extension_loaded('apcu')) {
-            throw new \RuntimeException('Unable to use APC(u) cache as APC(u) extension is not enabled.');
-        }
+    private $cache = array();
 
-        parent::__construct($prefix);
-    }
+    /**
+     * @var array
+     */
+    private $expire = array();
 
     /**
      * @throws \InvalidArgumentException
@@ -28,13 +25,15 @@ class Apc extends AbstractCache
     public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
     {
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
+        $now = time();
 
-        if (false === $result = apc_fetch($id)) {
+        if (!array_key_exists($id, $this->cache) || ($this->expire[$id] < $now)) {
             $result = $this->call($callback, $params);
-            apc_store($id, $result, $expireIn);
+            $this->cache[$id] = $result;
+            $this->expire[$id] = $now + $expireIn;
         }
 
-        return $result;
+        return $this->cache[$id];
     }
 
     /**
@@ -43,8 +42,9 @@ class Apc extends AbstractCache
      */
     public function contains($id)
     {
-        return apc_exists($this->prefixize($id));
+        return array_key_exists($id, $this->cache) && $this->expire[$id] >= time();
     }
+
 
     /**
      * @param string $id
@@ -52,27 +52,34 @@ class Apc extends AbstractCache
      */
     public function get($id)
     {
-        return apc_fetch($this->prefixize($id));
+        return $this->contains($id)
+            ? $this->cache[$id]
+            : false;
     }
 
     /**
      * @param string $id
      * @param mixed $value
      * @param int $expireIn
-     * @return array|bool
+     * @return bool
      */
     public function set($id, $value, $expireIn = 0)
     {
-        return apc_store($this->prefixize($id), $value, $expireIn);
+        $this->cache[$id] = $value;
+        $this->expire[$id] = time();
+
+        return true;
     }
 
     /**
      * @param string $id
-     * @return bool|string[]
+     * @return bool
      */
     public function delete($id)
     {
-        return apc_delete($this->prefixize($id));
+        unset($this->cache[$id], $this->expire[$id]);
+
+        return true;
     }
 
 }

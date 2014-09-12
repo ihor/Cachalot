@@ -1,6 +1,6 @@
 <?php
 
-namespace Cachalot\Cache;
+namespace Cachalot;
 
 abstract class AbstractCache implements \Cachalot\Cache
 {
