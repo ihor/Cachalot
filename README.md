@@ -36,3 +36,35 @@ Define the following requirement in your composer.json file:
     "ihor/cachalot": "2.1"
 }
 ```
+
+Documentation
+-------------
+**getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)**
+
+Returns cached callback result for given parameters. See usage above.
+
+* $callback - callback to be cached
+* $params - callback parameters
+* $expireIn - cache TTL
+* $cacheIdSuffix - cache suffix to avoid collisions when using anonymous functions
+
+
+**contains($id)**
+
+Checks if cache contains entry with given id
+
+**get($id)**
+
+Returns cache entry by id. Returns false if id was not found.
+
+**set($id, $value, $expireIn = 0)**
+
+Set cache entry with TTL by id. When $expireIn = 0 the value is cached forever.
+
+**delete($id)**
+
+Deletes cache entry by id.
+
+**clear()**
+
+Clears all cache entries.
