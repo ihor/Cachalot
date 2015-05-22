@@ -45,7 +45,6 @@ class ArrayCache extends AbstractCache
         return array_key_exists($id, $this->cache) && $this->expire[$id] >= time();
     }
 
-
     /**
      * @param string $id
      * @return bool|mixed
