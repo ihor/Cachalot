@@ -78,4 +78,12 @@ class RedisCache extends AbstractCache
         return !$this->cache->delete($this->prefixize($id));
     }
 
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        return $this->cache->flushAll();
+    }
+
 }

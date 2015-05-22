@@ -53,4 +53,9 @@ interface Cache
      */
     public function delete($id);
 
+    /**
+     * @return bool
+     */
+    public function clear();
+
 }

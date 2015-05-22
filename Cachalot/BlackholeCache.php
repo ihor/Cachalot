@@ -55,4 +55,12 @@ class BlackholeCache extends AbstractCache
         return true;
     }
 
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        return true;
+    }
+
 }

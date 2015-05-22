@@ -77,4 +77,13 @@ class XcacheCache extends AbstractCache
         return xcache_unset($this->prefixize($id));
     }
 
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        xcache_clear_cache(XC_TYPE_VAR);
+        return true;
+    }
+
 }

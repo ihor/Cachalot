@@ -67,7 +67,6 @@ class ArrayCache extends AbstractCache
     {
         $this->cache[$id] = $value;
         $this->expire[$id] = time();
-
         return true;
     }
 
@@ -78,7 +77,15 @@ class ArrayCache extends AbstractCache
     public function delete($id)
     {
         unset($this->cache[$id], $this->expire[$id]);
+        return true;
+    }
 
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        $this->cache = array();
         return true;
     }
 

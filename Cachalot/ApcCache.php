@@ -75,4 +75,12 @@ class ApcCache extends AbstractCache
         return apc_delete($this->prefixize($id));
     }
 
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        return apc_clear_cache();
+    }
+
 }
