@@ -39,32 +39,33 @@ Define the following requirement in your composer.json file:
 
 Documentation
 -------------
-**getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)**
+##### getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
 
-Returns cached callback result for given parameters. See usage above.
+Returns cached callback result for given parameters. See the usage above.
 
-* $callback - callback to be cached
-* $params - callback parameters
-* $expireIn - cache TTL
-* $cacheIdSuffix - cache suffix to avoid collisions when using anonymous functions
+$callback is the function which results we want to be cached  
+$params are the function parameters  
+$expireIn sets cache TTL in seconds  
+$cacheIdSuffix allows to avoid collisions when using anonymous functions with adding a suffix to the cache key    
 
+To have possibility to use Cachalot as regular caching library when needed it contains classic cache methods:
 
-**contains($id)**
+##### contains($id)
 
 Checks if cache contains entry with given id
 
-**get($id)**
+##### get($id)
 
 Returns cache entry by id. Returns false if id was not found.
 
-**set($id, $value, $expireIn = 0)**
+##### set($id, $value, $expireIn = 0)
 
 Set cache entry with TTL by id. When $expireIn = 0 the value is cached forever.
 
-**delete($id)**
+##### delete($id)
 
 Deletes cache entry by id.
 
-**clear()**
+##### clear()
 
 Clears all cache entries.
