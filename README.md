@@ -60,7 +60,7 @@ Returns cache entry by id. Returns false if id was not found.
 
 ##### set($id, $value, $expireIn = 0)
 
-Set cache entry with TTL by id. When ```$expireIn = 0`` the value is cached forever.
+Set cache entry with TTL by id. When ```$expireIn = 0``` the value is cached forever.
 
 ##### delete($id)
 
