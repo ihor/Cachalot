@@ -43,10 +43,10 @@ Documentation
 
 Returns cached callback result for given parameters. See the usage above.
 
-$callback is the function which results we want to be cached  
-$params are the function parameters  
-$expireIn sets cache TTL in seconds  
-$cacheIdSuffix allows to avoid collisions when using anonymous functions with adding a suffix to the cache key    
+```$callback``` is the function which results we want to be cached  
+```$params``` are the function parameters  
+```$expireIn``` sets cache TTL in seconds  
+```$cacheIdSuffix``` allows to avoid collisions when using anonymous functions with adding a suffix to the cache key    
 
 To have possibility to use Cachalot as regular caching library when needed it contains classic cache methods:
 
@@ -60,7 +60,7 @@ Returns cache entry by id. Returns false if id was not found.
 
 ##### set($id, $value, $expireIn = 0)
 
-Set cache entry with TTL by id. When $expireIn = 0 the value is cached forever.
+Set cache entry with TTL by id. When ```$expireIn = 0`` the value is cached forever.
 
 ##### delete($id)
 
