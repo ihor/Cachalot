@@ -22,13 +22,17 @@ class ArrayCache extends AbstractCache
      * @param mixed $cacheIdSuffix
      * @return mixed
      */
-    public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
+    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null)
     {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
+        }
+
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
         $now = time();
 
-        if (!array_key_exists($id, $this->cache) || ($this->expire[$id] < $now)) {
-            $result = $this->call($callback, $params);
+        if (!isset($this->cache[$id]) || !array_key_exists($id, $this->cache) || ($this->expire[$id] < $now)) {
+            $result = call_user_func_array($callback, $params);
             $this->cache[$id] = $result;
             $this->expire[$id] = $now + $expireIn;
         }
@@ -42,7 +46,7 @@ class ArrayCache extends AbstractCache
      */
     public function contains($id)
     {
-        return array_key_exists($id, $this->cache) && $this->expire[$id] >= time();
+        return (isset($this->cache[$id]) || array_key_exists($id, $this->cache)) && $this->expire[$id] >= time();
     }
 
     /**
