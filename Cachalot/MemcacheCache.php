@@ -5,6 +5,11 @@ namespace Cachalot;
 class MemcacheCache extends AbstractCache
 {
     /**
+     * @var int
+     */
+    protected static $maxKeyLength = 250;
+
+    /**
      * @var \Memcache
      */
     private $cache;
@@ -14,7 +19,7 @@ class MemcacheCache extends AbstractCache
      * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($memcache, $prefix = '')
+    public function __construct(\Memcache $memcache, $prefix = '')
     {
         $this->cache = $memcache;
         parent::__construct($prefix);
@@ -28,12 +33,15 @@ class MemcacheCache extends AbstractCache
      * @param mixed $cacheIdSuffix
      * @return mixed
      */
-    public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
+    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null)
     {
-        $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
+        }
 
+        $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
         if (false === $result = $this->cache->get($id)) {
-            $result = $this->call($callback, $params);
+            $result = call_user_func_array($callback, $params);
             $this->cache->set($id, $result, false, $expireIn);
         }
 
