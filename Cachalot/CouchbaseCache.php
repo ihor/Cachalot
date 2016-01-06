@@ -5,6 +5,11 @@ namespace Cachalot;
 class CouchbaseCache extends AbstractCache
 {
     /**
+     * @var int
+     */
+    protected static $maxKeyLength = 250;
+
+    /**
      * @var \Couchbase
      */
     private $cache;
@@ -14,7 +19,7 @@ class CouchbaseCache extends AbstractCache
      * @param string $prefix
      * @throws \RuntimeException
      */
-    public function __construct($couchbase, $prefix = '')
+    public function __construct(\Couchbase $couchbase, $prefix = '')
     {
         $this->cache = $couchbase;
         parent::__construct($prefix);
@@ -28,12 +33,16 @@ class CouchbaseCache extends AbstractCache
      * @param mixed $cacheIdSuffix
      * @return mixed
      */
-    public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
+    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null)
     {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
+        }
+
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
         if (!($result = $this->cache->get($id))) {
-            $result = $this->call($callback, $params);
+            $result = call_user_func_array($callback, $params);
             $this->cache->set($id, $result, $expireIn);
         }
 
@@ -46,7 +55,12 @@ class CouchbaseCache extends AbstractCache
      */
     public function contains($id)
     {
-        return (bool) $this->cache->get($this->prefixize($id));
+        try {
+            return (bool) $this->cache->get($this->prefixize($id));
+        }
+        catch (\CouchbaseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -55,7 +69,12 @@ class CouchbaseCache extends AbstractCache
      */
     public function get($id)
     {
-        return $this->cache->get($this->prefixize($id));
+        try {
+            return $this->cache->get($this->prefixize($id));
+        }
+        catch (\CouchbaseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -66,7 +85,12 @@ class CouchbaseCache extends AbstractCache
      */
     public function set($id, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($id), $value, $expireIn);
+        try {
+            return (bool) $this->cache->set($this->prefixize($id), $value, $expireIn);
+        }
+        catch (\CouchbaseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -75,7 +99,12 @@ class CouchbaseCache extends AbstractCache
      */
     public function delete($id)
     {
-        return $this->cache->delete($this->prefixize($id));
+        try {
+            return (bool) $this->cache->delete($this->prefixize($id));
+        }
+        catch (\CouchbaseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -83,7 +112,12 @@ class CouchbaseCache extends AbstractCache
      */
     public function clear()
     {
-        return $this->cache->flush();
+        try {
+            return $this->cache->flush();
+        }
+        catch (\CouchbaseException $e) {
+            return false;
+        }
     }
 
 }
