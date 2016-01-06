@@ -48,7 +48,7 @@ Returns cached callback result for given parameters. See the usage above.
 ```$expireIn``` sets cache TTL in seconds  
 ```$cacheIdSuffix``` allows to avoid collisions when using anonymous functions with adding a suffix to the cache key    
 
-To have possibility to use Cachalot as regular caching library when needed it contains classic cache methods:
+To have possibility to use Cachalot as a regular caching library when needed it contains classic cache methods:
 
 ##### contains($id)
 
@@ -56,16 +56,16 @@ Checks if cache contains entry with given id
 
 ##### get($id)
 
-Returns cache entry by id. Returns false if id was not found.
+Returns cache entry by id. Returns false if entry was not found
 
 ##### set($id, $value, $expireIn = 0)
 
-Set cache entry with TTL by id. When ```$expireIn = 0``` the value is cached forever.
+Sets cache entry with TTL by id. When ```$expireIn = 0``` the value is cached forever.
 
 ##### delete($id)
 
-Deletes cache entry by id.
+Deletes cache entry by id
 
 ##### clear()
 
-Clears all cache entries.
+Clears all cache entries
