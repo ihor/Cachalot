@@ -5,6 +5,11 @@ namespace Cachalot;
 abstract class AbstractCache implements \Cachalot\Cache
 {
     /**
+     * @var int
+     */
+    protected static $maxKeyLength = 250;
+
+    /**
      * @var string
      */
     private $prefix;
@@ -20,30 +25,10 @@ abstract class AbstractCache implements \Cachalot\Cache
     /**
      * @param \callable $callback
      * @param array $params
-     * @return mixed
-     * @throws \InvalidArgumentException
-     */
-    protected function call($callback, $params = array())
-    {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
-        }
-
-        $result = call_user_func_array($callback, $params);
-        if ($result instanceof \Iterator) {
-            $result = iterator_to_array($result);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param \callable $callback
-     * @param array $params
      * @param mixed $cacheIdSuffix
      * @return string
      */
-    protected function getCallbackCacheId($callback, $params = array(), $cacheIdSuffix = null)
+    protected function getCallbackCacheId($callback, array $params = array(), $cacheIdSuffix = null)
     {
         if (is_array($callback)) {
             $callbackStr = (is_string($callback[0]) ? $callback[0] : get_class($callback[0])) . '::' . $callback[1];
@@ -57,7 +42,8 @@ abstract class AbstractCache implements \Cachalot\Cache
 
         $paramsStr = '(' . implode(',', array_map(array($this, 'stringilizeCallbackParam'), $params)) . ')';
 
-        return $this->prefix . $callbackStr . $paramsStr . ($cacheIdSuffix ? $cacheIdSuffix : '');
+        $id = $this->prefix . $callbackStr . $paramsStr . ($cacheIdSuffix ? $cacheIdSuffix : '');
+        return static::$maxKeyLength && strlen($id) > static::$maxKeyLength ? md5($id) : $id;
     }
 
     /**
@@ -68,6 +54,10 @@ abstract class AbstractCache implements \Cachalot\Cache
     {
         if (is_array($param)) {
             return '[' . implode(',', array_map(array($this, 'stringilizeCallbackParam'), $param)) . ']';
+        }
+
+        if (is_object($param)) {
+            return serialize($param);
         }
 
         return strval($param);
