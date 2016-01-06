@@ -25,7 +25,7 @@ interface Cache
      * @param mixed $cacheIdSuffix
      * @return mixed
      */
-    public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null);
+    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null);
 
     /**
      * @param string $id

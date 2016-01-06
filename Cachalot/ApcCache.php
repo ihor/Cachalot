@@ -25,12 +25,16 @@ class ApcCache extends AbstractCache
      * @param mixed $cacheIdSuffix
      * @return mixed
      */
-    public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
+    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null)
     {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
+        }
+
         $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
 
         if (false === $result = apc_fetch($id)) {
-            $result = $this->call($callback, $params);
+            $result = call_user_func_array($callback, $params);
             apc_store($id, $result, $expireIn);
         }
 

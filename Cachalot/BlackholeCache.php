@@ -12,9 +12,13 @@ class BlackholeCache extends AbstractCache
      * @param mixed $cacheIdSuffix
      * @return mixed
      */
-    public function getCached($callback, $params = array(), $expireIn = 0, $cacheIdSuffix = null)
+    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null)
     {
-        return $this->call($callback, $params);
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
+        }
+
+        return call_user_func_array($callback, $params);
     }
 
     /**
