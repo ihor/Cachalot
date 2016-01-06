@@ -72,4 +72,34 @@ abstract class AbstractCache implements \Cachalot\Cache
         return $this->prefix . $id;
     }
 
+    /**
+     * @param mixed $value
+     * @return string
+     */
+    protected function serializeCompound($value)
+    {
+        return is_array($value) || is_object($value)? serialize($value) : $value;
+    }
+
+    /**
+     * @param string $value
+     * @return mixed
+     */
+    protected function unserializeCompound($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        if (strlen($value) < 2 || $value[1] !== ':'  || ($value[0] !== 'a' && $value[0] !== 'O' && $value[0] !== 'C')) {
+            return $value;
+        }
+
+        if ($unserialized = @unserialize($value)) {
+            return $unserialized;
+        }
+
+        return $value;
+    }
+
 }

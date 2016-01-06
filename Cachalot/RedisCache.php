@@ -38,10 +38,10 @@ class RedisCache extends AbstractCache
 
         if (false === $result = $this->cache->get($id)) {
             $result = call_user_func_array($callback, $params);
-            $this->cache->set($id, $this->serialize($result), $expireIn);
+            $this->cache->set($id, $this->serializeCompound($result), $expireIn);
         }
 
-        return $this->unserialize($result);
+        return $this->unserializeCompound($result);
     }
 
     /**
@@ -63,7 +63,7 @@ class RedisCache extends AbstractCache
             return false;
         }
 
-        return $this->unserialize($value);
+        return $this->unserializeCompound($value);
     }
 
     /**
@@ -74,7 +74,7 @@ class RedisCache extends AbstractCache
      */
     public function set($id, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($id), $this->serialize($value), $expireIn);
+        return $this->cache->set($this->prefixize($id), $this->serializeCompound($value), $expireIn);
     }
 
     /**
@@ -92,36 +92,6 @@ class RedisCache extends AbstractCache
     public function clear()
     {
         return $this->cache->flushAll();
-    }
-
-    /**
-     * @param mixed $value
-     * @return string
-     */
-    private function serialize($value)
-    {
-        return is_array($value) || is_object($value) ? serialize($value) : $value;
-    }
-
-    /**
-     * @param string $value
-     * @return mixed
-     */
-    private function unserialize($value)
-    {
-        if (!is_string($value)) {
-            return $value;
-        }
-
-        if (strlen($value) < 2 || $value[1] !== ':'  || ($value[0] !== 'a' && $value[0] !== 'O' && $value[0] !== 'C')) {
-            return $value;
-        }
-
-        if ($unserialized = @unserialize($value)) {
-            return $unserialized;
-        }
-
-        return $value;
     }
 
 }
