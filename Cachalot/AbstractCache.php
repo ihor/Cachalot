@@ -24,11 +24,11 @@ abstract class AbstractCache implements \Cachalot\Cache
 
     /**
      * @param \callable $callback
-     * @param array $params
-     * @param mixed $cacheIdSuffix
+     * @param array $args
+     * @param mixed $cacheKeySuffix
      * @return string
      */
-    protected function getCallbackCacheId($callback, array $params = array(), $cacheIdSuffix = null)
+    protected function getCallbackCacheKey($callback, array $args = array(), $cacheKeySuffix = null)
     {
         if (is_array($callback)) {
             $callbackStr = (is_string($callback[0]) ? $callback[0] : get_class($callback[0])) . '::' . $callback[1];
@@ -40,36 +40,36 @@ abstract class AbstractCache implements \Cachalot\Cache
             $callbackStr = $callback;
         }
 
-        $paramsStr = '(' . implode(',', array_map(array($this, 'stringilizeCallbackParam'), $params)) . ')';
+        $argStr = '(' . implode(',', array_map(array($this, 'stringilizeCallbackArg'), $args)) . ')';
 
-        $id = $this->prefix . $callbackStr . $paramsStr . ($cacheIdSuffix ? $cacheIdSuffix : '');
-        return static::$maxKeyLength && strlen($id) > static::$maxKeyLength ? md5($id) : $id;
+        $key = $this->prefix . $callbackStr . $argStr . ($cacheKeySuffix ? $cacheKeySuffix : '');
+        return static::$maxKeyLength && strlen($key) > static::$maxKeyLength ? md5($key) : $key;
     }
 
     /**
-     * @param mixed $param
+     * @param mixed $arg
      * @return string
      */
-    protected function stringilizeCallbackParam($param)
+    protected function stringilizeCallbackArg($arg)
     {
-        if (is_array($param)) {
-            return '[' . implode(',', array_map(array($this, 'stringilizeCallbackParam'), $param)) . ']';
+        if (is_array($arg)) {
+            return '[' . implode(',', array_map(array($this, 'stringilizeCallbackArg'), $arg)) . ']';
         }
 
-        if (is_object($param)) {
-            return serialize($param);
+        if (is_object($arg)) {
+            return serialize($arg);
         }
 
-        return strval($param);
+        return strval($arg);
     }
 
     /**
-     * @param string $id
+     * @param string $key
      * @return string
      */
-    protected function prefixize($id)
+    protected function prefixize($key)
     {
-        return $this->prefix . $id;
+        return $this->prefix . $key;
     }
 
     /**

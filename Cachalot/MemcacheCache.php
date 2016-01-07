@@ -26,67 +26,80 @@ class MemcacheCache extends AbstractCache
     }
 
     /**
-     * @throws \InvalidArgumentException
-     * @param \callable $callback
-     * @param array $params
+     * Returns cached $callback result
+     *
+     * @param callable $callback
+     * @param array $args Callback arguments
      * @param int $expireIn Seconds
-     * @param mixed $cacheIdSuffix
+     * @param string|null $cacheKeySuffix Is needed to avoid collisions when caches results of anonymous functions
      * @return mixed
+     * @throws \InvalidArgumentException
      */
-    public function getCached($callback, array $params = array(), $expireIn = 0, $cacheIdSuffix = null)
+    public function getCached($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null)
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
         }
 
-        $id = $this->getCallbackCacheId($callback, $params, $cacheIdSuffix);
-        if (false === $result = $this->cache->get($id)) {
-            $result = call_user_func_array($callback, $params);
-            $this->cache->set($id, $result, false, $expireIn);
+        $key = $this->getCallbackCacheKey($callback, $args, $cacheKeySuffix);
+
+        if (false === $result = $this->cache->get($key)) {
+            $result = call_user_func_array($callback, $args);
+            $this->cache->set($key, $result, false, $expireIn);
         }
 
         return $result;
     }
 
     /**
-     * @param string $id
+     * Returns true if cache contains entry with given key
+     *
+     * @param string $key
      * @return bool
      */
-    public function contains($id)
+    public function contains($key)
     {
-        return (bool) $this->cache->get($this->prefixize($id));
+        return (bool) $this->cache->get($this->prefixize($key));
     }
 
     /**
-     * @param string $id
+     * Returns cached value by key or false if there is no cache entry for the given key
+     *
+     * @param string $key
      * @return bool|mixed
      */
-    public function get($id)
+    public function get($key)
     {
-        return $this->cache->get($this->prefixize($id));
+        return $this->cache->get($this->prefixize($key));
     }
 
     /**
-     * @param string $id
+     * Caches value by key
+     *
+     * @param string $key
      * @param mixed $value
-     * @param int $expireIn
+     * @param int $expireIn Seconds
      * @return bool
      */
-    public function set($id, $value, $expireIn = 0)
+    public function set($key, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($id), $value, false, $expireIn);
+        return $this->cache->set($this->prefixize($key), $value, false, $expireIn);
     }
 
     /**
-     * @param string $id
+     * Deletes cache entry by key
+     *
+     * @param string $key
      * @return bool
      */
-    public function delete($id)
+    public function delete($key)
     {
-        return $this->cache->delete($this->prefixize($id));
+        return $this->cache->delete($this->prefixize($key));
     }
 
     /**
+     * Deletes all cache entries
+     *
      * @return bool
      */
     public function clear()
