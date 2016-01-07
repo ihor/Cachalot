@@ -124,7 +124,7 @@ Deletes all cache entries
 $cache->clear(); // flushed
 ```
 
-### Available back-ends
+### Back-ends
 
 ##### Cachalot\ApcCache
 
