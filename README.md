@@ -149,7 +149,7 @@ $memcache->connect('unix:///usr/local/var/run/memcached.sock', 0);
 $cache = new \Cachalot\MemcacheCache($memcache, 'dev:'); // creates new cache instance with key prefix "dev:"
 ```
 
-##### Cachalot\MemcacheCache
+##### Cachalot\MemcachedCache
 
 Uses [Memcached PHP extension](http://php.net/manual/en/book.memcached.php) to store results in [Memcached](http://memcached.org)
 
