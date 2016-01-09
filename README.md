@@ -39,7 +39,7 @@ $sum = $cache->getCached('array_sum', [[1, 2, 3]]);
 $unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
 
 // Anonymous function
-$greeting = $cache->getCached($greet, ['World!'], 0, 'greet');
+$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
 
 // Callable object
 $count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
@@ -172,10 +172,23 @@ $cache = new \Cachalot\RedisCache($redis, 'dev:'); // creates new cache instance
 
 ##### Cachalot\CouchbaseCache
 
+Uses [Couchbase PHP SDK 1](http://docs.couchbase.com/couchbase-sdk-php-1.2/index.html)
+
 ```php
 $couchbase = new \Couchbase('127.0.0.1', '', '', 'default');
 
-$cache = new \Cachalot\CouchbaseCache($redis, 'dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\CouchbaseCache($couchbase, 'dev:'); // creates new cache instance with key prefix "dev:"
+```
+
+##### Cachalot\Couchbase2Cache
+
+Uses [Couchbase PHP SDK 2](http://developer.couchbase.com/documentation/server/4.0/sdks/php-2.0/php-intro.html)
+
+```php
+$cluster = new \CouchbaseCluster('couchbase://localhost');
+$bucket = $cluster->openBucket('default');
+
+$cache = new \Cachalot\Couchbase2Cache($bucket, 'dev:'); // creates new cache instance with key prefix "dev:"
 ```
 
 ##### Cachalot\ArrayCache
