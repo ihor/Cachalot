@@ -159,7 +159,7 @@ $cache = new \Cachalot\RedisCache($redis, 'dev:'); // creates new cache instance
 
 ##### Cachalot\CouchbaseCache
 
-Uses [Couchbase PHP SDK 1](http://docs.couchbase.com/couchbase-sdk-php-1.2/index.html)
+Uses [Couchbase PHP SDK 1.x](http://docs.couchbase.com/couchbase-sdk-php-1.2/index.html)
 
 ```php
 $couchbase = new \Couchbase('127.0.0.1', '', '', 'default');
@@ -169,7 +169,7 @@ $cache = new \Cachalot\CouchbaseCache($couchbase, 'dev:'); // creates new cache 
 
 ##### Cachalot\Couchbase2Cache
 
-Uses [Couchbase PHP SDK 2](http://developer.couchbase.com/documentation/server/4.0/sdks/php-2.0/php-intro.html)
+Uses [Couchbase PHP SDK 2.x](http://developer.couchbase.com/documentation/server/4.0/sdks/php-2.0/php-intro.html)
 
 ```php
 $cluster = new \CouchbaseCluster('couchbase://localhost');
