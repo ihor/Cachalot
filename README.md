@@ -3,6 +3,15 @@ Cachalot
 
 Cachalot (cache a lot) is an easy to use caching library. It supposed to do only one thing - return cached callback result.
 
+Installation
+------------
+Define the following requirement in your composer.json file:
+```
+"require": {
+    "ihor/cachalot": "2.2"
+}
+```
+
 Usage
 -----
 Create Cachalot cache instance:
@@ -63,15 +72,6 @@ class CountCommand
     }
 }
 $count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
-```
-
-Installation
-------------
-Define the following requirement in your composer.json file:
-```
-"require": {
-    "ihor/cachalot": "2.2"
-}
 ```
 
 Documentation
