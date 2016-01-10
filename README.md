@@ -8,20 +8,20 @@ Usage
 ```php
 $cache = new \Cachalot\ArrayCache();
 
-$greet = function($name) {
-    return 'Hello ' . $name;
-};
+// built-in function
+$sum = $cache->getCached('array_sum', [[1, 2, 3]]); 
 
-function unique(array $input) {
-    return array_unique($input);
-}
+// user defined function
+function unique(array $input) { return array_unique($input); }
 
-class CountCommand {
-    public function __invoke(array $input) {
-        return count($input);
-    }
-}
+$unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
 
+// anonymous function
+$greet = function($name) { return 'Hello ' . $name; };
+
+$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
+
+// static method
 class Calculator {
     public static function subtract($x, $y) { 
         return $x - $y;
@@ -32,24 +32,21 @@ class Calculator {
     }
 }
 
-// Built-in function
-$sum = $cache->getCached('array_sum', [[1, 2, 3]]);
-
-// User defined function
-$unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
-
-// Anonymous function
-$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
-
-// Callable object
-$count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
-
-// Static method
 $sub = $cache->getCached(['Calculator', 'subtract'], [[1, 2]]);
- 
-// Object method
+
+// instance method
 $calculator = new Calculator();
 $product = $cache->getCached([$calculator, 'multiply'], [[1, 2]]);
+
+// callable object
+class CountCommand {
+    public function __invoke(array $input) {
+        return count($input);
+    }
+}
+
+$count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
+
 ```
 
 Installation
