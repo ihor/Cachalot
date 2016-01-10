@@ -59,7 +59,7 @@ Returns cached $callback result
 ```$callback``` is the function (callable) which results we want to be cached  
 ```$args``` are the arguments passed to the ```$callback```  
 ```$expireIn``` sets cache TTL in seconds  
-```$cacheIdSuffix``` is needed to avoid collisions when caching results of anonymous functions  
+```$cacheIdSuffix``` is needed to avoid collisions when callback is an anoymous function
 
 ```php
 $sum = $cache->getCached('array_sum', [[1, 2, 3]]);
