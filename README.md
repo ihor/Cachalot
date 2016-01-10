@@ -116,13 +116,13 @@ $cache->clear(); // flushed
 ##### Cachalot\ApcCache
 
 ```php
-$cache = new Cachalot\ApcCache('dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new Cachalot\ApcCache();
 ```
 
 ##### Cachalot\XcacheCache
 
 ```php
-$cache = new Cachalot\XcacheCache('dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new Cachalot\XcacheCache();
 ```
 
 ##### Cachalot\MemcacheCache
@@ -133,7 +133,7 @@ Uses [Memcache PHP extension](http://php.net/manual/en/book.memcache.php) to sto
 $memcache = new \Memcache();
 $memcache->connect('unix:///usr/local/var/run/memcached.sock', 0);
 
-$cache = new \Cachalot\MemcacheCache($memcache, 'dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\MemcacheCache($memcache);
 ```
 
 ##### Cachalot\MemcachedCache
@@ -144,7 +144,7 @@ Uses [Memcached PHP extension](http://php.net/manual/en/book.memcached.php) to s
 $memcached = new \Memcached();
 $memcached->addServer('/usr/local/var/run/memcached.sock', 0);
 
-$cache = new \Cachalot\MemcachedCache($memcached, 'dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\MemcachedCache($memcached);
 ```
 
 ##### Cachalot\RedisCache
@@ -154,7 +154,7 @@ $redis = new \Redis();
 $redis->connect('127.0.0.1');
 $redis->select(1);
 
-$cache = new \Cachalot\RedisCache($redis, 'dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\RedisCache($redis);
 ```
 
 ##### Cachalot\CouchbaseCache
@@ -164,7 +164,7 @@ Uses [Couchbase PHP SDK 1.x](http://docs.couchbase.com/couchbase-sdk-php-1.2/ind
 ```php
 $couchbase = new \Couchbase('127.0.0.1', '', '', 'default');
 
-$cache = new \Cachalot\CouchbaseCache($couchbase, 'dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\CouchbaseCache($couchbase);
 ```
 
 ##### Cachalot\Couchbase2Cache
@@ -175,13 +175,13 @@ Uses [Couchbase PHP SDK 2.x](http://developer.couchbase.com/documentation/server
 $cluster = new \CouchbaseCluster('couchbase://localhost');
 $bucket = $cluster->openBucket('default');
 
-$cache = new \Cachalot\Couchbase2Cache($bucket, 'dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\Couchbase2Cache($bucket);
 ```
 
 ##### Cachalot\ArrayCache
 
 ```php
-$cache = new \Cachalot\ArrayCache('dev:'); // creates new cache instance with key prefix "dev:"
+$cache = new \Cachalot\ArrayCache();
 ```
 
 ##### Cachalot\BlackholeCache
