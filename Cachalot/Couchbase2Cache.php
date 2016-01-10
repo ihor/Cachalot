@@ -65,7 +65,7 @@ class Couchbase2Cache extends AbstractCache
     public function contains($key)
     {
         try {
-            return (bool) $this->cache->get($this->prefixize($key));
+            return (bool) $this->cache->get($this->prepareKey($key));
         }
         catch (\CouchbaseException $e) {
             return false;
@@ -81,7 +81,7 @@ class Couchbase2Cache extends AbstractCache
     public function get($key)
     {
         try {
-            return $this->unserializeCompound($this->cache->get($this->prefixize($key))->value);
+            return $this->unserializeCompound($this->cache->get($this->prepareKey($key))->value);
         }
         catch (\CouchbaseException $e) {
             return false;
@@ -99,7 +99,7 @@ class Couchbase2Cache extends AbstractCache
     public function set($key, $value, $expireIn = 0)
     {
         try {
-            return (bool) $this->cache->upsert($this->prefixize($key), $this->serializeCompound($value), array(
+            return (bool) $this->cache->upsert($this->prepareKey($key), $this->serializeCompound($value), array(
                 'expiry' => $expireIn
             ));
         }
@@ -117,7 +117,7 @@ class Couchbase2Cache extends AbstractCache
     public function delete($key)
     {
         try {
-            return (bool) $this->cache->remove($this->prefixize($key));
+            return (bool) $this->cache->remove($this->prepareKey($key));
         }
         catch (\CouchbaseException $e) {
             return false;

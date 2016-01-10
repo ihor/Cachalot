@@ -59,7 +59,7 @@ class MemcacheCache extends AbstractCache
      */
     public function contains($key)
     {
-        return (bool) $this->cache->get($this->prefixize($key));
+        return (bool) $this->cache->get($this->prepareKey($key));
     }
 
     /**
@@ -70,7 +70,7 @@ class MemcacheCache extends AbstractCache
      */
     public function get($key)
     {
-        return $this->cache->get($this->prefixize($key));
+        return $this->cache->get($this->prepareKey($key));
     }
 
     /**
@@ -83,7 +83,7 @@ class MemcacheCache extends AbstractCache
      */
     public function set($key, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($key), $value, false, $expireIn);
+        return $this->cache->set($this->prepareKey($key), $value, false, $expireIn);
     }
 
     /**
@@ -94,7 +94,7 @@ class MemcacheCache extends AbstractCache
      */
     public function delete($key)
     {
-        return $this->cache->delete($this->prefixize($key));
+        return $this->cache->delete($this->prepareKey($key));
     }
 
     /**

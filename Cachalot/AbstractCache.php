@@ -41,9 +41,7 @@ abstract class AbstractCache implements \Cachalot\Cache
         }
 
         $argStr = '(' . implode(',', array_map(array($this, 'stringilizeCallbackArg'), $args)) . ')';
-
-        $key = $this->prefix . $callbackStr . $argStr . ($cacheKeySuffix ? $cacheKeySuffix : '');
-        return static::$maxKeyLength && strlen($key) > static::$maxKeyLength ? md5($key) : $key;
+        return $this->prepareKey($callbackStr . $argStr . ($cacheKeySuffix ? $cacheKeySuffix : ''));
     }
 
     /**
@@ -67,9 +65,11 @@ abstract class AbstractCache implements \Cachalot\Cache
      * @param string $key
      * @return string
      */
-    protected function prefixize($key)
+    protected function prepareKey($key)
     {
-        return $this->prefix . $key;
+        return static::$maxKeyLength && strlen($key) > static::$maxKeyLength
+            ? md5($key)
+            : $this->prefix . $key;
     }
 
     /**

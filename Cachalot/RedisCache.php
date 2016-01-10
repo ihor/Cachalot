@@ -54,7 +54,7 @@ class RedisCache extends AbstractCache
      */
     public function contains($key)
     {
-        return $this->cache->exists($this->prefixize($key));
+        return $this->cache->exists($this->prepareKey($key));
     }
 
     /**
@@ -65,7 +65,7 @@ class RedisCache extends AbstractCache
      */
     public function get($key)
     {
-        if (false === $value = $this->cache->get($this->prefixize($key))) {
+        if (false === $value = $this->cache->get($this->prepareKey($key))) {
             return false;
         }
 
@@ -82,7 +82,7 @@ class RedisCache extends AbstractCache
      */
     public function set($key, $value, $expireIn = 0)
     {
-        return $this->cache->set($this->prefixize($key), $this->serializeCompound($value), $expireIn);
+        return $this->cache->set($this->prepareKey($key), $this->serializeCompound($value), $expireIn);
     }
 
     /**
@@ -93,7 +93,7 @@ class RedisCache extends AbstractCache
      */
     public function delete($key)
     {
-        return (bool) $this->cache->del($this->prefixize($key));
+        return (bool) $this->cache->del($this->prepareKey($key));
     }
 
     /**

@@ -53,7 +53,7 @@ class XcacheCache extends AbstractCache
      */
     public function contains($key)
     {
-        return xcache_isset($this->prefixize($key));
+        return xcache_isset($this->prepareKey($key));
     }
 
     /**
@@ -64,7 +64,7 @@ class XcacheCache extends AbstractCache
      */
     public function get($key)
     {
-        if ($value = xcache_get($this->prefixize($key))) {
+        if ($value = xcache_get($this->prepareKey($key))) {
             return $this->unserializeCompound($value);
         }
 
@@ -81,7 +81,7 @@ class XcacheCache extends AbstractCache
      */
     public function set($key, $value, $expireIn = 0)
     {
-        return xcache_set($this->prefixize($key), $this->serializeCompound($value), $expireIn);
+        return xcache_set($this->prepareKey($key), $this->serializeCompound($value), $expireIn);
     }
 
     /**
@@ -92,7 +92,7 @@ class XcacheCache extends AbstractCache
      */
     public function delete($key)
     {
-        return xcache_unset($this->prefixize($key));
+        return xcache_unset($this->prepareKey($key));
     }
 
     /**

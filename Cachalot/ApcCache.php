@@ -51,7 +51,7 @@ class ApcCache extends AbstractCache
      */
     public function contains($key)
     {
-        return apc_exists($this->prefixize($key));
+        return apc_exists($this->prepareKey($key));
     }
 
     /**
@@ -62,7 +62,7 @@ class ApcCache extends AbstractCache
      */
     public function get($key)
     {
-        return apc_fetch($this->prefixize($key));
+        return apc_fetch($this->prepareKey($key));
     }
 
     /**
@@ -75,7 +75,7 @@ class ApcCache extends AbstractCache
      */
     public function set($key, $value, $expireIn = 0)
     {
-        return apc_store($this->prefixize($key), $value, $expireIn);
+        return apc_store($this->prepareKey($key), $value, $expireIn);
     }
 
     /**
@@ -86,7 +86,7 @@ class ApcCache extends AbstractCache
      */
     public function delete($key)
     {
-        return apc_delete($this->prefixize($key));
+        return apc_delete($this->prepareKey($key));
     }
 
     /**
