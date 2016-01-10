@@ -8,43 +8,33 @@ Usage
 ```php
 $cache = new \Cachalot\ArrayCache();
 
-// built-in function
+// built-in function cache
 $sum = $cache->getCached('array_sum', [[1, 2, 3]]); 
 
-// user defined function
+// user defined function cache
 function unique(array $input) { return array_unique($input); }
-
 $unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
 
-// anonymous function
-$greet = function($name) { return 'Hello ' . $name; };
-
-$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
-
-// static method
 class Calculator {
-    public static function subtract($x, $y) { 
-        return $x - $y;
-    }
-    
-    public function multiply($x, $y) {
-        return $x * $y;
-    }
+    public static function subtract($x, $y) {  return $x - $y; }
+    public function multiply($x, $y) { return $x * $y; }
 }
 
+// static method cache
 $sub = $cache->getCached(['Calculator', 'subtract'], [[1, 2]]);
 
-// instance method
+// instance method cache
 $calculator = new Calculator();
 $product = $cache->getCached([$calculator, 'multiply'], [[1, 2]]);
 
-// callable object
-class CountCommand {
-    public function __invoke(array $input) {
-        return count($input);
-    }
-}
+// anonymous function cache
+$greet = function($name) { return 'Hello ' . $name; };
+$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
 
+// callable object cache
+class CountCommand {
+    public function __invoke(array $input) { return count($input); }
+}
 $count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
 
 ```
