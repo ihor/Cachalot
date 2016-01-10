@@ -14,64 +14,38 @@ Define the following requirement in your composer.json file:
 
 Usage
 -----
-Create Cachalot cache instance:
 ```php
 $cache = new \Cachalot\ArrayCache();
-```
 
-Cache PHP built-in function results:
-```php
+// built-in function cache
 $sum = $cache->getCached('array_sum', [[1, 2, 3]]); 
-```
 
-Cache user defined function results:
-```php
-function unique(array $input) 
-{ 
-    return array_unique($input); 
-}
-
+// user defined function cache
+function unique(array $input) { return array_unique($input); }
 $unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
-```
 
-Cache static and instance methods results:
-```php
 class Calculator {
-    public static function subtract($x, $y) 
-    {  
-        return $x - $y; 
-    }
-    
-    public function multiply($x, $y) 
-    { 
-        return $x * $y; 
-    }
+    public static function subtract($x, $y) {  return $x - $y; }
+    public function multiply($x, $y) { return $x * $y; }
 }
 
+// static method cache
 $sub = $cache->getCached(['Calculator', 'subtract'], [[1, 2]]);
 
+// instance method cache
 $calculator = new Calculator();
 $product = $cache->getCached([$calculator, 'multiply'], [[1, 2]]);
-```
 
-Cache anonymous function results:
-```php
-$greet = function($name) { 
-    return 'Hello ' . $name; 
-};
+// anonymous function cache
+$greet = function($name) { return 'Hello ' . $name; };
 $greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
-```
 
-Cache callable object results:
-```php
-class CountCommand 
-{
-    public function __invoke(array $input) 
-    { 
-        return count($input); 
-    }
+// callable object cache
+class CountCommand {
+    public function __invoke(array $input) { return count($input); }
 }
 $count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
+
 ```
 
 Documentation
