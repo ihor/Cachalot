@@ -25,7 +25,7 @@ abstract class AbstractCache implements \Cachalot\Cache
     /**
      * @param \callable $callback
      * @param array $args
-     * @param mixed $cacheKeySuffix
+     * @param string $cacheKeySuffix
      * @return string
      */
     protected function getCallbackCacheKey($callback, array $args = array(), $cacheKeySuffix = null)

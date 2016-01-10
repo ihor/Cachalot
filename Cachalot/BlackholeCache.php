@@ -10,7 +10,7 @@ class BlackholeCache extends AbstractCache
      * @param callable $callback
      * @param array $args Callback arguments
      * @param int $expireIn Seconds
-     * @param string|null $cacheKeySuffix Is needed to avoid collisions when caches results of anonymous functions
+     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
      * @return mixed
      * @throws \InvalidArgumentException
      */
