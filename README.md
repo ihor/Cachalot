@@ -5,38 +5,64 @@ Cachalot (cache a lot) is an easy to use caching library. It supposed to do only
 
 Usage
 -----
+Create Cachalot cache instance:
 ```php
 $cache = new \Cachalot\ArrayCache();
+```
 
-// built-in function cache
+Cache PHP built-in function results:
+```php
 $sum = $cache->getCached('array_sum', [[1, 2, 3]]); 
+```
 
-// user defined function cache
-function unique(array $input) { return array_unique($input); }
-$unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
-
-class Calculator {
-    public static function subtract($x, $y) {  return $x - $y; }
-    public function multiply($x, $y) { return $x * $y; }
+Cache user defined function results:
+```php
+function unique(array $input) 
+{ 
+    return array_unique($input); 
 }
 
-// static method cache
+$unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
+```
+
+Cache static and instance methods results:
+```php
+class Calculator {
+    public static function subtract($x, $y) 
+    {  
+        return $x - $y; 
+    }
+    
+    public function multiply($x, $y) 
+    { 
+        return $x * $y; 
+    }
+}
+
 $sub = $cache->getCached(['Calculator', 'subtract'], [[1, 2]]);
 
-// instance method cache
 $calculator = new Calculator();
 $product = $cache->getCached([$calculator, 'multiply'], [[1, 2]]);
+```
 
-// anonymous function cache
-$greet = function($name) { return 'Hello ' . $name; };
+Cache anonymous function results:
+```php
+$greet = function($name) { 
+    return 'Hello ' . $name; 
+};
 $greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
+```
 
-// callable object cache
-class CountCommand {
-    public function __invoke(array $input) { return count($input); }
+Cache callable object results:
+```php
+class CountCommand 
+{
+    public function __invoke(array $input) 
+    { 
+        return count($input); 
+    }
 }
 $count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
-
 ```
 
 Installation
