@@ -22,16 +22,16 @@ $cache = new \Cachalot\ArrayCache();
 $length = $cache->getCached('strlen', ['hello world']); 
 
 // user defined functions
-$unique = $cache->getCached('my_unique', [[1, 2, 3, 1, 2, 3]]);
+$unique = $cache->getCached('uniqueValues', [[1, 2, 3, 1, 2, 3]]);
 
 // static methods
-$result = $cache->getCached(['MyCalculator', 'subtract'], [1, 2]);
+$result = $cache->getCached(['Calculator', 'subtract'], [1, 2]);
 
 // instance methods
-$product = $cache->getCached([new MyCalculator(), 'multiply'], [1, 2]);
+$square = $cache->getCached([new Calculator(), 'square'], [5]);
 
 // anonymous functions
-$square = $cache->getCached($sqr, [5], \Cachalot\Cache::ONE_DAY, 'greet');
+$reason = $cache->getCached($getErrorReason, [], \Cachalot\Cache::ONE_DAY, 'error-reason');
 
 // callable objects
 $trimed = $cache->getCached(new Trimmer(), [' hello world ']);
