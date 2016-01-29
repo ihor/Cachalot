@@ -135,6 +135,16 @@ abstract class AbstractCacheBackendTest extends \PHPUnit_Framework_TestCase
         static::$cache->getCached('hello world');
     }
 
+    public function testInvoke()
+    {
+        $this->assertCacheBackendSetUp();
+
+        $f = function($result) { return $result; };
+
+        $cache = self::$cache;
+        $this->assertEquals('hello world', $cache($f, ['hello world']));
+    }
+
     public function testSetGetDelete()
     {
         $this->assertCacheBackendSetUp();

@@ -30,6 +30,18 @@ interface Cache
     public function getCached($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null);
 
     /**
+     * Returns cached $callback result
+     *
+     * @param callable $callback
+     * @param array $args Callback arguments
+     * @param int $expireIn Seconds
+     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function __invoke($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null);
+
+    /**
      * Returns true if cache contains entry with given key
      *
      * @param string $key

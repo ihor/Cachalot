@@ -23,6 +23,21 @@ abstract class AbstractCache implements \Cachalot\Cache
     }
 
     /**
+     * Returns cached $callback result
+     *
+     * @param callable $callback
+     * @param array $args Callback arguments
+     * @param int $expireIn Seconds
+     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function __invoke($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null)
+    {
+        return $this->getCached($callback, $args, $expireIn, $cacheKeySuffix);
+    }
+
+    /**
      * @param \callable $callback
      * @param array $args
      * @param string $cacheKeySuffix
