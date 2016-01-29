@@ -15,37 +15,26 @@ Define the following requirement in your composer.json file:
 Usage
 -----
 ```php
+// with Cachalot cache you can easier cache results of different types of functions
 $cache = new \Cachalot\ArrayCache();
 
-// built-in function cache
-$sum = $cache->getCached('array_sum', [[1, 2, 3]]); 
+// built-in functions
+$length = $cache->getCached('strlen', ['hello world']); 
 
-// user defined function cache
-function unique(array $input) { return array_unique($input); }
-$unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
+// user defined functions
+$unique = $cache->getCached('my_unique', [[1, 2, 3, 1, 2, 3]]);
 
-class Calculator {
-    public static function subtract($x, $y) {  return $x - $y; }
-    public function multiply($x, $y) { return $x * $y; }
-}
+// static methods
+$result = $cache->getCached(['MyCalculator', 'subtract'], [1, 2]);
 
-// static method cache
-$sub = $cache->getCached(['Calculator', 'subtract'], [[1, 2]]);
+// instance methods
+$product = $cache->getCached([new MyCalculator(), 'multiply'], [1, 2]);
 
-// instance method cache
-$calculator = new Calculator();
-$product = $cache->getCached([$calculator, 'multiply'], [[1, 2]]);
+// anonymous functions
+$square = $cache->getCached($sqr, [5], \Cachalot\Cache::ONE_DAY, 'greet');
 
-// anonymous function cache
-$greet = function($name) { return 'Hello ' . $name; };
-$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
-
-// callable object cache
-class CountCommand {
-    public function __invoke(array $input) { return count($input); }
-}
-$count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
-
+// callable objects
+$trimed = $cache->getCached(new Trimmer(), [' hello world ']);
 ```
 
 Documentation
