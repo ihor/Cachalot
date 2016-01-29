@@ -15,41 +15,30 @@ Define the following requirement in your composer.json file:
 Usage
 -----
 ```php
+// With Cachalot cache you can easier cache results of different types of functions
 $cache = new \Cachalot\ArrayCache();
 
-// built-in function cache
-$sum = $cache->getCached('array_sum', [[1, 2, 3]]); 
+// built-in functions
+$length = $cache->getCached('strlen', ['hello world']); 
 
-// user defined function cache
-function unique(array $input) { return array_unique($input); }
-$unique = $cache->getCached('unique', [[1, 2, 3, 1, 2, 3]]);
+// user defined functions
+$unique = $cache->getCached('uniqueValues', [[1, 2, 3, 1, 2, 3]]);
 
-class Calculator {
-    public static function subtract($x, $y) {  return $x - $y; }
-    public function multiply($x, $y) { return $x * $y; }
-}
+// static methods
+$result = $cache->getCached(['Calculator', 'subtract'], [1, 2]);
 
-// static method cache
-$sub = $cache->getCached(['Calculator', 'subtract'], [[1, 2]]);
+// instance methods
+$square = $cache->getCached([new Calculator(), 'square'], [5]);
 
-// instance method cache
-$calculator = new Calculator();
-$product = $cache->getCached([$calculator, 'multiply'], [[1, 2]]);
+// anonymous functions
+$reason = $cache->getCached($getErrorReason, [], \Cachalot\Cache::ONE_DAY, 'error-reason');
 
-// anonymous function cache
-$greet = function($name) { return 'Hello ' . $name; };
-$greeting = $cache->getCached($greet, ['World!'], \Cachalot\Cache::ONE_DAY, 'greet');
-
-// callable object cache
-class CountCommand {
-    public function __invoke(array $input) { return count($input); }
-}
-$count = $cache->getCached(new CountCommand(), [[, 2, 3]]);
-
+// callable objects
+$trimed = $cache->getCached(new Trimmer(), [' hello world ']);
 ```
 
-Documentation
--------------
+Reference
+---------
 ### Cache API
 
 ##### getCached($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null)
@@ -62,7 +51,7 @@ Returns cached $callback result
 ```$cacheIdSuffix``` is needed to avoid collisions when callback is an anoymous function
 
 ```php
-$sum = $cache->getCached('array_sum', [[1, 2, 3]]);
+$length = $cache->getCached('strlen', ['hello world']);
 ```
 
 To have possibility to use Cachalot as a regular caching library when needed it contains classic cache methods
@@ -83,7 +72,7 @@ Returns cached value by key or false if there is no cache entry for the given ke
 
 ```php
 if ($lastVisitDate = $cache->get('lastVisit')) {
-    echo sprintf('Last visit was %s', date('Y-m-d H:i:s', $lastVisitDate));
+    echo sprintf('Last visit was at %s', $lastVisitDate);
 }
 ```
 
@@ -108,12 +97,14 @@ $cache->delete('lastVisit');
 Deletes all cache entries
 
 ```php
-$cache->clear(); // flushed
+$cache->clear();
 ```
 
 ### Back-ends
 
 ##### Cachalot\ApcCache
+
+Stores data in [APC](http://php.net/manual/en/book.apc.php)
 
 ```php
 $cache = new Cachalot\ApcCache();
@@ -121,13 +112,15 @@ $cache = new Cachalot\ApcCache();
 
 ##### Cachalot\XcacheCache
 
+Stores data in [Xcache](https://xcache.lighttpd.net/)
+
 ```php
 $cache = new Cachalot\XcacheCache();
 ```
 
 ##### Cachalot\MemcacheCache
 
-Uses [Memcache PHP extension](http://php.net/manual/en/book.memcache.php) to store results in [Memcached](http://memcached.org)
+Stores data in [Memcached](http://memcached.org) using [Memcache PHP extension](http://php.net/manual/en/book.memcache.php) 
 
 ```php
 $memcache = new \Memcache();
@@ -138,7 +131,7 @@ $cache = new \Cachalot\MemcacheCache($memcache);
 
 ##### Cachalot\MemcachedCache
 
-Uses [Memcached PHP extension](http://php.net/manual/en/book.memcached.php) to store results in [Memcached](http://memcached.org)
+Stores data in [Memcached](http://memcached.org) using [Memcached PHP extension](http://php.net/manual/en/book.memcached.php)
 
 ```php
 $memcached = new \Memcached();
@@ -148,6 +141,8 @@ $cache = new \Cachalot\MemcachedCache($memcached);
 ```
 
 ##### Cachalot\RedisCache
+
+Stores data in [Redis](http://redis.io)
 
 ```php
 $redis = new \Redis();
@@ -159,7 +154,7 @@ $cache = new \Cachalot\RedisCache($redis);
 
 ##### Cachalot\CouchbaseCache
 
-Uses [Couchbase PHP SDK 1.x](http://docs.couchbase.com/couchbase-sdk-php-1.2/index.html)
+Stores data in [Couchbase](http://www.couchbase.com/) using [Couchbase PHP SDK 1.x](http://docs.couchbase.com/couchbase-sdk-php-1.2/index.html)
 
 ```php
 $couchbase = new \Couchbase('127.0.0.1', '', '', 'default');
@@ -169,7 +164,7 @@ $cache = new \Cachalot\CouchbaseCache($couchbase);
 
 ##### Cachalot\Couchbase2Cache
 
-Uses [Couchbase PHP SDK 2.x](http://developer.couchbase.com/documentation/server/4.0/sdks/php-2.0/php-intro.html)
+Stores data in [Couchbase](http://www.couchbase.com/) using [Couchbase PHP SDK 2.x](http://developer.couchbase.com/documentation/server/4.0/sdks/php-2.0/php-intro.html)
 
 ```php
 $cluster = new \CouchbaseCluster('couchbase://localhost');
@@ -180,13 +175,15 @@ $cache = new \Cachalot\Couchbase2Cache($bucket);
 
 ##### Cachalot\ArrayCache
 
+Stores data in PHP array
+
 ```php
 $cache = new \Cachalot\ArrayCache();
 ```
 
 ##### Cachalot\BlackholeCache
 
-Never caches results
+Never stores any data
 
 ```php
 $cache = new \Cachalot\BlackholeCache();
