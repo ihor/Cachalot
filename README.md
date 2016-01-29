@@ -15,7 +15,7 @@ Define the following requirement in your composer.json file:
 Usage
 -----
 ```php
-// With Cachalot cache you can easier cache results of different types of functions
+// With Cachalot cache you can easily cache results of different types of functions
 $cache = new \Cachalot\ArrayCache();
 
 // built-in functions
