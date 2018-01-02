@@ -20,17 +20,18 @@ class ArrayCache extends AbstractCache
      * @param callable $callback
      * @param array $args Callback arguments
      * @param int $expireIn Seconds
-     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
+     * @param string|null $suffix Is needed to avoid cache collisions when callback is an anonymous function
+     * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function getCached($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null)
+    public function getCached($callback, array $args = array(), $expireIn = 0, $suffix = null, $useSuffixAsKey = false)
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
         }
 
-        $key = $this->getCallbackCacheKey($callback, $args, $cacheKeySuffix);
+        $key = $this->getCallbackCacheKey($callback, $args, $suffix);
         $now = time();
 
         if (!isset($this->cache[$key]) || !array_key_exists($key, $this->cache) || ($this->expire[$key] < $now)) {

@@ -28,23 +28,29 @@ abstract class AbstractCache implements \Cachalot\Cache
      * @param callable $callback
      * @param array $args Callback arguments
      * @param int $expireIn Seconds
-     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
+     * @param string|null $suffix Is needed to avoid cache collisions when callback is an anonymous function
+     * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function __invoke($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null)
+    public function __invoke($callback, array $args = array(), $expireIn = 0, $suffix = null, $useSuffixAsKey = false)
     {
-        return $this->getCached($callback, $args, $expireIn, $cacheKeySuffix);
+        return $this->getCached($callback, $args, $expireIn, $suffix, $useSuffixAsKey);
     }
 
     /**
      * @param \callable $callback
      * @param array $args
-     * @param string $cacheKeySuffix
+     * @param string $suffix
+     * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return string
      */
-    protected function getCallbackCacheKey($callback, array $args = array(), $cacheKeySuffix = null)
+    protected function getCallbackCacheKey($callback, array $args = array(), $suffix = null, $useSuffixAsKey = false)
     {
+        if ($useSuffixAsKey) {
+            return $this->prepareKey($suffix);
+        }
+
         if (is_array($callback)) {
             $callbackStr = (is_string($callback[0]) ? $callback[0] : get_class($callback[0])) . '::' . $callback[1];
         }
@@ -56,7 +62,7 @@ abstract class AbstractCache implements \Cachalot\Cache
         }
 
         $argStr = '(' . implode(',', array_map(array($this, 'stringilizeCallbackArg'), $args)) . ')';
-        return $this->prepareKey($callbackStr . $argStr . ($cacheKeySuffix ? $cacheKeySuffix : ''));
+        return $this->prepareKey($callbackStr . $argStr . ($suffix ? $suffix : ''));
     }
 
     /**

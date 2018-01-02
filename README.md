@@ -41,14 +41,15 @@ Reference
 ---------
 ### Cache API
 
-##### getCached($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null)
+##### getCached($callback, array $args = array(), $expireIn = 0, $suffix = null, $useSuffixAsKey = false)
 
 Returns cached $callback result
 
 ```$callback``` is the function (callable) which results we want to be cached  
 ```$args``` are the arguments passed to the ```$callback```  
 ```$expireIn``` sets cache TTL in seconds  
-```$cacheIdSuffix``` is needed to avoid collisions when callback is an anoymous function
+```$suffix``` is needed to avoid collisions when callback is an anonymous function
+```$useSuffixAsKey``` when true cache suffix will be used as a cache key
 
 ```php
 $length = $cache->getCached('strlen', ['hello world']);

@@ -11,10 +11,15 @@ class RedisCacheTest extends AbstractCacheBackendTest
             return;
         }
 
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1');
-        $redis->select(1);
-        $redis->flushAll();
+        try {
+            $redis = new \Redis();
+            $redis->connect('127.0.0.1');
+            $redis->select(1);
+            $redis->flushAll();
+        }
+        catch (\RedisException $e) {
+            return;
+        }
 
         static::$cache = new \Cachalot\RedisCache($redis, 'cachalot-test:');
     }

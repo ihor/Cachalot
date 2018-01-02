@@ -23,11 +23,12 @@ interface Cache
      * @param callable $callback
      * @param array $args Callback arguments
      * @param int $expireIn Seconds
-     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
+     * @param string|null $suffix Is needed to avoid cache collisions when callback is an anonymous function
+     * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function getCached($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null);
+    public function getCached($callback, array $args = array(), $expireIn = 0, $suffix = null, $useSuffixAsKey = false);
 
     /**
      * Returns cached $callback result
@@ -35,11 +36,12 @@ interface Cache
      * @param callable $callback
      * @param array $args Callback arguments
      * @param int $expireIn Seconds
-     * @param string|null $cacheKeySuffix Is needed to avoid collisions when callback is an anonymous function
+     * @param string|null $suffix Is needed to avoid cache collisions when callback is an anonymous function
+     * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function __invoke($callback, array $args = array(), $expireIn = 0, $cacheKeySuffix = null);
+    public function __invoke($callback, array $args = array(), $expireIn = 0, $suffix = null, $useSuffixAsKey = false);
 
     /**
      * Returns true if cache contains entry with given key
