@@ -45,7 +45,7 @@ abstract class AbstractCache implements \Cachalot\Cache
      * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return string
      */
-    protected function getCallbackCacheKey($callback, array $args = array(), $suffix = null, $useSuffixAsKey = false)
+    public function getCallbackCacheKey($callback, array $args = array(), $suffix = null, $useSuffixAsKey = false)
     {
         if ($useSuffixAsKey) {
             return $this->prepareKey($suffix);

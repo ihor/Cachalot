@@ -32,7 +32,7 @@ class MemcachedCache extends AbstractCache
      * @param bool $useSuffixAsKey When is true then instead automatic cache key generation the value provided in $suffix will be used as cache key
      * @return string
      */
-    protected function getCallbackCacheKey($callback, array $args = array(), $suffix = null, $useSuffixAsKey = false)
+    public function getCallbackCacheKey($callback, array $args = array(), $suffix = null, $useSuffixAsKey = false)
     {
         $key = parent::getCallbackCacheKey($callback, $args, $suffix, $useSuffixAsKey);
         if (strpos($key, ' ') !== false) {
