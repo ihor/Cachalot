@@ -42,7 +42,7 @@ class Couchbase2Cache extends AbstractCache
             throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
         }
 
-        $key = $this->getCallbackCacheKey($callback, $args, $suffix);
+        $key = $this->getCallbackCacheKey($callback, $args, $suffix, $useSuffixAsKey);
 
         try {
             $result = $this->cache->get($key)->value;

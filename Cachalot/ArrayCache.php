@@ -31,7 +31,7 @@ class ArrayCache extends AbstractCache
             throw new \InvalidArgumentException('First argument of getCached method has to be a valid callback');
         }
 
-        $key = $this->getCallbackCacheKey($callback, $args, $suffix);
+        $key = $this->getCallbackCacheKey($callback, $args, $suffix, $useSuffixAsKey);
         $now = time();
 
         if (!isset($this->cache[$key]) || !array_key_exists($key, $this->cache) || ($this->expire[$key] < $now)) {
